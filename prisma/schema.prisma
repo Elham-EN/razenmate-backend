@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Relationship: User and Chatroom:
+// Many-to-Many Relationship: A User can be a part of multiple Chatrooms, and a Chatroom can 
+// have multiple Users. This relationship is implied by the chatrooms field in the User model 
+// and the users field in the Chatroom model.
+model User {
+  id                Int         @id @default(autoincrement())
+  fullname          String
+  avatarUrl         String?
+  email             String      @unique
+  password          String
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  // Relationship: User can have multiple chatrooms
+  chatrooms         Chatroom[]  @relation("ChatroomUser")
+   // Relationship: User can have multiple messages
+  messages          Message[]
+}
+
+model Chatroom {
+  id               Int         @id @default(autoincrement())
+  name             String
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  // Relationship: chatroom can have many users
+  users            User[]      @relation("ChatroomUser")
+  // Relationship: chatroom can have many users
+  messages         Message[]
+}
+
+
+// Relationship: User and Message:
+// One-to-Many Relationship: A User can send multiple Messages, but each Message is sent by 
+// one specific User. This is represented by the messages field in the User model and the user 
+// field in the Message model. The foreign key in the Message model that connects it to User is userId.
+model Message {
+   id               Int         @id @default(autoincrement()) // primary key
+   content          String   
+   imageUrl         String?
+   userId           Int // foreign key
+   chatroomId       Int // foreign key
+   createdAt        DateTime    @default(now())
+   updatedAt        DateTime    @updatedAt
+   user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+   chatroom         Chatroom    @relation(fields: [chatroomId], references: [id], onDelete: Cascade)
+}
+
+// The onDelete: Cascade directive in Prisma indicates that when a parent record is deleted, all its 
+// related child records will also be automatically deleted
+// If a User is deleted, all Messages associated with that user will also be deleted.
+// If a Chatroom is deleted, all Messages associated with that chatroom will also be deleted.
+// In short, it ensures data integrity by automatically removing related records to prevent orphaned entries

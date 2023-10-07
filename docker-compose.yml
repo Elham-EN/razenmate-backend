@@ -1,8 +1,31 @@
 version: '3.1'
 
+# definition of the services (or containers)
 services:
+  # definition of a service named postgres
   postgres:
+    # service uses the postgres image from Docker Hub with version 10
     image: postgres:10
+    # Gives a custom name to the running container instance
     container_name: razenmate_postgres
+    # definition of port mappings between the host and the container
     ports:
       - '5432:5432'
+    environment:
+      POSTGRES_USER: elham
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: chatapp
+    # definition of volume mount points for this service. Maps the named
+    # volume razenmate_postgres_data to /var/lib/postgresql/data inside
+    # the container. This ensures that the database data remains persistent
+    # across container restarts or removals
+    volumes:
+      - razenmate_postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:lastest
+    ports:
+      - '6379:6379'
+
+volumes:
+  razenmate_postgres_data:
