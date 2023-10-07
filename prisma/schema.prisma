@@ -28,6 +28,10 @@ model User {
   messages          Message[]
 }
 
+// when two fields in different models both reference each other using an array type ([]) and share 
+// the same @relation name (in this case, "ChatroomUser"), it indicates a many-to-many relationship 
+// between those models.
+
 model Chatroom {
   id               Int         @id @default(autoincrement())
   name             String
