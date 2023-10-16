@@ -22,6 +22,7 @@ async function bootstrap() {
   });
   app.use(cookieParser());
   app.use(graphqlUploadExpress({ maxFileSize: 10000000000, maxFiles: 1 }));
+  // instruct Nest.js to automatically validate incoming requests against the relevant DTOs.
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
