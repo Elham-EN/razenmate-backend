@@ -177,7 +177,7 @@ export class AuthService {
     const user = await this.validateUser(loginDto);
     // if user already exists, throw bad request exception
     if (!user) {
-      throw new UnauthorizedException({
+      throw new BadRequestException({
         invalidCredentials: 'invalid credentials',
       });
     }
