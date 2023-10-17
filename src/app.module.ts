@@ -17,6 +17,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       driver: ApolloDriver,
       useFactory: async (configService: ConfigService) => {
         return {
+          context: ({ req, res }) => ({ req, res }),
           playground: true,
           autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
           sortSchema: true,

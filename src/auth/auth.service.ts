@@ -10,16 +10,7 @@ import { Request, Response } from 'express';
 import { PrismaService } from 'src/prisma.service';
 import { LoginDto, RegisterDto } from './dto';
 import bcrypt from 'bcrypt';
-
-interface UserType {
-  id: number;
-  fullname: string;
-  avatarUrl: string;
-  email: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { UserType } from './types';
 
 @Injectable()
 export class AuthService {
@@ -148,7 +139,7 @@ export class AuthService {
     });
     // if user already exists, throw bad request exception
     if (existingUser) {
-      throw new BadRequestException({ email: 'Email already in use' });
+      throw new BadRequestException('Email already in use');
     }
     // Hash the password
     const hasnhedPassword = await bcrypt.hash(registerDto.password, 10);
@@ -177,9 +168,7 @@ export class AuthService {
     const user = await this.validateUser(loginDto);
     // if user already exists, throw bad request exception
     if (!user) {
-      throw new BadRequestException({
-        invalidCredentials: 'invalid credentials',
-      });
+      throw new BadRequestException('invalid credentials');
     }
     // otherwise, issue the tokens that return the user data
     return this.issueTokens(user, response);

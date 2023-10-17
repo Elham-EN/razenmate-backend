@@ -15,3 +15,13 @@ export class LoginResponse {
   @Field(() => User)
   user: User;
 }
+
+export interface UserType {
+  id: number;
+  fullname: string;
+  avatarUrl: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
