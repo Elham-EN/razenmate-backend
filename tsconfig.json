@@ -2,7 +2,9 @@
   "compilerOptions": {
     // use the CommonJS module system: the outputted JavaScript will use require()
     // and module.exports
-    "module": "commonjs",
+    "module": "NodeNext",
+    "maxNodeModuleJsDepth": 10,
+    "allowJs": true,
     // Enables a more compatible way of importing default exports from ES Modules.
     // This is especially useful if you're using a mix of default and named exports.
     // Essentially, it allows you to use import thing from 'module-name'; even if
@@ -17,7 +19,7 @@
     "target": "ESNext",
     // This dictates how module imports are resolved. "node" resolution, which mimics
     // Node.js's strategy for locating modules (i.e., looking in node_modules
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
