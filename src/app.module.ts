@@ -45,19 +45,21 @@ const pubSub = new RedisPubSub({
           // Use both packages at the same time
           subscriptions: {
             'graphql-ws': true,
-            'subscriptions-transport-ws': true,
+            'subscriptions-transport-ws': {
+              onConnect: (connectionParams) => {
+                const token = tokenService.extractToken(connectionParams);
+                if (!token) {
+                  throw new Error('Token was not provided');
+                }
+                const user = tokenService.validateToken(token);
+                if (!user) {
+                  throw new Error('Invalid token');
+                }
+                return { user };
+              },
+            },
           },
-          onConnect: (connectionParams) => {
-            const token = tokenService.extractToken(connectionParams);
-            if (!token) {
-              throw new Error('Token was not provided');
-            }
-            const user = tokenService.validateToken(token);
-            if (!user) {
-              throw new Error('Invalid token');
-            }
-            return { user };
-          },
+
           // connection.context will be equal to what was returned by the
           // "onConnect" callback
           context: ({ req, res, connection }) => {
